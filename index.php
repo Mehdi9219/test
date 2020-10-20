@@ -1,16 +1,8 @@
 <?php
-$philo=0;
-$maths=0;
-$anglais=0;
-$svt=0;
-$sport=0;
-$droit=0;
-$coursPhilo;
-$coursMaths;
-$coursAnglais;
-$coursSvt;
-$coursSport;
-$coursDroit;
+$conn;
+$result;
+$sql;
+$row;
 function calculerDate()
 {
     //pas de cours pendant les weekend
@@ -70,56 +62,19 @@ function affiche($cours){
             break;
     }
 }
-function matiere($cours){
-    switch ($cours["id"]) {
-        case 1:
-            $GLOBALS['coursPhilo']=$cours;
-            $GLOBALS['philo']=affiche($cours);
-            break;
-        case 2:
-            $GLOBALS['coursMaths']=$cours;
-            $GLOBALS['maths']=affiche($cours);
-            break;
-        case 3:
-            $GLOBALS['coursAnglais']=$cours;
-            $GLOBALS['anglais']=affiche($cours);
-            break;
-        case 4:
-            $GLOBALS['coursSvt']=$cours;
-            $GLOBALS['svt']=affiche($cours);
-            break;
-        case 5:
-            $GLOBALS['coursSport']=$cours;
-            $GLOBALS['sport']=affiche($cours);
-            break;
-        case 6:
-            $GLOBALS['coursDroit']=$cours;
-            $GLOBALS['droit']=affiche($cours);
-            break;
-    }
-}
 $servername = "localhost";
 $username = "root";
 $password = "root";
 $dbname = "teachr";
 // Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
+$GLOBALS['$conn'] = new mysqli($servername, $username, $password, $dbname);
 // Check connection
-if ($conn->connect_error) {
-  die("Connection failed: " . $conn->connect_error);
+if ($GLOBALS['$conn']->connect_error) {
+  die("Connection failed: " . $GLOBALS['$conn']->connect_error);
 }
 
-$sql = "SELECT * FROM cours";
-$result = $conn->query($sql);
-if ($result->num_rows > 0) {
-  // output data of each row
-  while($row = $result->fetch_assoc()) {
-    matiere($row);
-  }
-} else {
-  echo "0 results";
-}
-$conn->close();
+$GLOBALS['$sql'] = "SELECT * FROM cours";
+$GLOBALS['$result'] = $GLOBALS['$conn']->query($GLOBALS['$sql']);
 ?>
 <!DOCTYPE html>
 <html>
@@ -154,54 +109,16 @@ $conn->close();
                 <h2 class="text-center">Prochain Cours : <?php calculerDate(); ?></h2>
             </div>
             <div class="row features">
-                <?php if($GLOBALS['philo']==1) : ?>
-                    <div class="col-sm-6 col-lg-4 item"><i class="fa fa-pencil icon"></i>
-                        <h3 class="name">Cours régulier de <?php echo $GLOBALS['coursPhilo']["libelle"] ?></h3>
-                        <p class="description">Jours :<?php calculJours($GLOBALS['coursPhilo']) ?></p>
-                        <p class="description">Fréquence : <?php echo $GLOBALS['coursPhilo']["frequence"] ?> par jour</p>
-                        <p class="description">Professeur : <?php echo $GLOBALS['coursPhilo']["professeur"] ?></p>
+            <?php if ($GLOBALS['$result']->num_rows > 0) : while($GLOBALS['$row'] = $GLOBALS['$result']->fetch_assoc()) {?>
+                <?php if( affiche($GLOBALS['$row'])) : ?>
+                    <div class="col-sm-6 col-lg-4 item"><i class="<?php echo $GLOBALS['$row']["icone"] ?>"></i>
+                        <h3 class="name">Cours régulier <?php echo $GLOBALS['$row']["libelle"] ?></h3>
+                        <p class="description">Jours: <?php calculJours($GLOBALS['$row']) ?><br></p>
+                        <p class="description">Fréquence: <?php echo $GLOBALS['$row']["frequence"] ?> par jour<br></p>
+                        <p class="description">Professeur: <?php echo $GLOBALS['$row']["professeur"] ?><br></p>
                     </div>
                 <?php endif; ?>
-                <?php if($GLOBALS['maths']==1) : ?>
-                    <div class="col-sm-6 col-lg-4 item"><i class="fa fa-calculator icon"></i>
-                        <h3 class="name">Cours régulier de <?php echo $GLOBALS['coursMaths']["libelle"] ?><br><br></h3>
-                        <p class="description">Jours: <?php calculJours($GLOBALS['coursMaths']) ?></p>
-                        <p class="description">Fréquence: <?php echo $GLOBALS['coursMaths']["frequence"] ?> par jour</p>
-                        <p class="description">Professeur: <?php echo $GLOBALS['coursMaths']["professeur"] ?></p>
-                    </div>
-                <?php endif; ?>
-                <?php if($GLOBALS['anglais']==1) : ?>
-                    <div class="col-sm-6 col-lg-4 item"><i class="fa fa-commenting-o icon"></i>
-                        <h3 class="name">Cours régulier d'<?php echo $GLOBALS['coursAnglais']["professeur"] ?></h3>
-                        <p class="description">Jours: <?php calculJours($GLOBALS['coursAnglais']) ?><br></p>
-                        <p class="description">Fréquence: <?php echo $GLOBALS['coursAnglais']["frequence"] ?> par jour<br></p>
-                        <p class="description">Professeur: <?php echo $GLOBALS['coursAnglais']["professeur"] ?><br></p>
-                    </div>
-                <?php endif; ?>
-                <?php if($GLOBALS['svt']==1) : ?>
-                    <div class="col-sm-6 col-lg-4 item"><i class="fa fa-medkit icon"></i>
-                        <h3 class="name">Cours régulier <?php echo $GLOBALS['coursSvt']["libelle"] ?></h3>
-                        <p class="description">Jours: <?php calculJours($GLOBALS['coursSvt']) ?><br></p>
-                        <p class="description">Fréquence: <?php echo $GLOBALS['coursSvt']["frequence"] ?> par jour<br></p>
-                        <p class="description">Professeur: <?php echo $GLOBALS['coursSvt']["professeur"] ?><br></p>
-                    </div>
-                <?php endif; ?>
-                <?php if($GLOBALS['sport']==1) : ?>
-                    <div class="col-sm-6 col-lg-4 item"><i class="fa fa-soccer-ball-o icon"></i>
-                        <h3 class="name">Cours régulier <?php echo $GLOBALS['coursSport']["libelle"] ?></h3>
-                        <p class="description">Jours: <?php calculJours($GLOBALS['coursSport']) ?><br></p>
-                        <p class="description">Fréquence: <?php echo $GLOBALS['coursSport']["frequence"] ?> par jour<br></p>
-                        <p class="description">Professeur: <?php echo $GLOBALS['coursSport']["professeur"] ?><br></p>
-                    </div>
-                <?php endif; ?>
-                <?php if($GLOBALS['droit']==1) : ?>
-                    <div class="col-sm-6 col-lg-4 item"><i class="fa fa-institution icon"></i>
-                        <h3 class="name">Cours régulier <?php echo $GLOBALS['coursDroit']["libelle"] ?></h3>
-                        <p class="description">Jours: <?php calculJours($GLOBALS['coursDroit']) ?><br></p>
-                        <p class="description">Fréquence: <?php echo $GLOBALS['coursDroit']["frequence"] ?> par jour<br></p>
-                        <p class="description">Professeur: <?php echo $GLOBALS['coursDroit']["professeur"] ?><br></p>
-                    </div>
-                <?php endif; ?>
+            <?php } endif; ?>
             </div>
         </div>
     </div>
@@ -209,3 +126,4 @@ $conn->close();
     <script src="assets/bootstrap/js/bootstrap.min.js"></script>
 </body>
 </html>
+<?php $GLOBALS['$conn']->close(); ?>
