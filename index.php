@@ -5,11 +5,31 @@ $anglais=0;
 $svt=0;
 $sport=0;
 $droit=0;
-$joursPhilo="";
+$coursPhilo;
+function calculJours($cours){
+    $jours="";
+    if((int)$cours["lundi"]>0){
+        $jours=$jours."Lundi,";
+    }
+    if((int)$cours["mardi"]>0){
+        $jours=$jours."Mardi,";
+    }
+    if((int)$cours["mercredi"]>0){
+        $jours=$jours."Mercredi,";
+    }
+    if((int)$cours["jeudi"]>0){
+        $jours=$jours."Jeudi,";
+    }
+    if((int)$cours["vendredi"]>0){
+        $jours=$jours."Vendredi,";
+    }
+    echo substr($jours,0,-1);
+}
 function affiche($cours){
     $day=date('w');
     switch ($day) {
         case 1:
+            $GLOBALS['coursPhilo']=$cours;
             return (int)$cours["lundi"]>0;
             break;
         case 2:
@@ -107,9 +127,9 @@ $conn->close();
             <?php if($GLOBALS['philo']==1) : ?>
                 <div class="col-sm-6 col-lg-4 item"><i class="fa fa-pencil icon"></i>
                     <h3 class="name">Cours régulier de Philosophie</h3>
-                    <p class="description">Jours : Lundi, Mardi, Mercredi</p>
-                    <p class="description">Fréquence : 1H30 par jour</p>
-                    <p class="description">Professeur : Mr. Rodolphe</p>
+                    <p class="description">Jours :<?php calculJours($GLOBALS['coursPhilo']) ?></p>
+                    <p class="description">Fréquence : <?php echo $GLOBALS['coursPhilo']["frequence"] ?> par jour</p>
+                    <p class="description">Professeur : <?php echo $GLOBALS['coursPhilo']["professeur"] ?></p>
                 </div>
                 <?php endif; ?>
                 <div class="col-sm-6 col-lg-4 item"><i class="fa fa-calculator icon"></i>
