@@ -1,9 +1,57 @@
 <?php
+$philo=0;
+$maths=0;
+$anglais=0;
+$svt=0;
+$sport=0;
+$droit=0;
+$joursPhilo="";
+function affiche($cours){
+    $day=date('w');
+    switch ($day) {
+        case 1:
+            return (int)$cours["lundi"]>0;
+            break;
+        case 2:
+            return (int)$cours["mardi"]>0;
+            break;
+        case 3:
+            return (int)$cours["mercredi"]>0;
+            break;
+        case 4:
+            return (int)$cours["jeudi"]>0;
+            break;
+        case 5:
+            return (int)$cours["vendredi"]>0;
+            break;
+    }
+}
+function matiere($cours){
+    switch ($cours["id"]) {
+        case 1:
+            $GLOBALS['philo']=affiche($cours);
+            break;
+        case 2:
+            $GLOBALS['maths']=affiche($cours);
+            break;
+        case 3:
+            $GLOBALS['anglais']=affiche($cours);
+            break;
+        case 4:
+            $GLOBALS['svt']=affiche($cours);
+            break;
+        case 5:
+            $GLOBALS['sport']=affiche($cours);
+            break;
+        case 6:
+            $GLOBALS['droit']=affiche($cours);
+            break;
+    }
+}
 $servername = "localhost";
 $username = "root";
 $password = "root";
 $dbname = "teachr";
-
 // Create connection
 $conn = new mysqli($servername, $username, $password, $dbname);
 // Check connection
@@ -13,11 +61,10 @@ if ($conn->connect_error) {
 
 $sql = "SELECT * FROM cours";
 $result = $conn->query($sql);
-
 if ($result->num_rows > 0) {
   // output data of each row
   while($row = $result->fetch_assoc()) {
-    echo "id: " . $row["id"]. " - libelle: " . $row["libelle"]. " " . $row["frequence"]. "<br>";
+    matiere($row);
   }
 } else {
   echo "0 results";
@@ -57,12 +104,14 @@ $conn->close();
                 <h2 class="text-center">Prochain Cours : le lundi 19 Octobre</h2>
             </div>
             <div class="row features">
+            <?php if($GLOBALS['philo']==1) : ?>
                 <div class="col-sm-6 col-lg-4 item"><i class="fa fa-pencil icon"></i>
                     <h3 class="name">Cours régulier de Philosophie</h3>
                     <p class="description">Jours : Lundi, Mardi, Mercredi</p>
                     <p class="description">Fréquence : 1H30 par jour</p>
                     <p class="description">Professeur : Mr. Rodolphe</p>
                 </div>
+                <?php endif; ?>
                 <div class="col-sm-6 col-lg-4 item"><i class="fa fa-calculator icon"></i>
                     <h3 class="name">Cours régulier de Maths<br><br></h3>
                     <p class="description">Jours: Lundi,Mardi,Jeudi</p>
@@ -99,5 +148,4 @@ $conn->close();
     <script src="assets/js/jquery.min.js"></script>
     <script src="assets/bootstrap/js/bootstrap.min.js"></script>
 </body>
-
 </html>
