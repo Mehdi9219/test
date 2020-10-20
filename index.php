@@ -9,18 +9,12 @@ function calculerDate()
     $day=date('w');
     $message;
     if($day <= 5)
-    {
         $message= date("d/m/yy");
-    }
     else
-    {
         if($day =6)
-            {
-                $message= Date('d/m/yy', strtotime('+3 days'));
-            }
+                $message= Date('d/m/yy', strtotime('+2 days'));
             else
-                $message= Date('d/m/yy', strtotime('+3 days'));
-    }
+                $message= Date('d/m/yy', strtotime('+1 days'));
     echo $message;
 }
 function calculJours($cours){
@@ -78,7 +72,6 @@ $GLOBALS['$result'] = $GLOBALS['$conn']->query($GLOBALS['$sql']);
 ?>
 <!DOCTYPE html>
 <html>
-
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
