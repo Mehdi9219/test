@@ -6,6 +6,31 @@ $svt=0;
 $sport=0;
 $droit=0;
 $coursPhilo;
+$coursMaths;
+$coursAnglais;
+$coursSvt;
+$coursSport;
+$coursDroit;
+function calculerDate()
+{
+    //pas de cours pendant les weekend
+    $day=date('w');
+    $message;
+    if($day <= 5)
+    {
+        $message= date("d/m/yy");
+    }
+    else
+    {
+        if($day =6)
+            {
+                $message= Date('d/m/yy', strtotime('+3 days'));
+            }
+            else
+                $message= Date('d/m/yy', strtotime('+3 days'));
+    }
+    echo $message;
+}
 function calculJours($cours){
     $jours="";
     if((int)$cours["lundi"]>0){
@@ -52,18 +77,23 @@ function matiere($cours){
             $GLOBALS['philo']=affiche($cours);
             break;
         case 2:
+            $GLOBALS['coursMaths']=$cours;
             $GLOBALS['maths']=affiche($cours);
             break;
         case 3:
+            $GLOBALS['coursAnglais']=$cours;
             $GLOBALS['anglais']=affiche($cours);
             break;
         case 4:
+            $GLOBALS['coursSvt']=$cours;
             $GLOBALS['svt']=affiche($cours);
             break;
         case 5:
+            $GLOBALS['coursSport']=$cours;
             $GLOBALS['sport']=affiche($cours);
             break;
         case 6:
+            $GLOBALS['coursDroit']=$cours;
             $GLOBALS['droit']=affiche($cours);
             break;
     }
@@ -121,47 +151,57 @@ $conn->close();
     <div class="features-clean">
         <div class="container">
             <div class="intro">
-                <h2 class="text-center">Prochain Cours : le lundi 19 Octobre</h2>
+                <h2 class="text-center">Prochain Cours : <?php calculerDate(); ?></h2>
             </div>
             <div class="row features">
                 <?php if($GLOBALS['philo']==1) : ?>
                     <div class="col-sm-6 col-lg-4 item"><i class="fa fa-pencil icon"></i>
-                        <h3 class="name">Cours régulier de Philosophie</h3>
+                        <h3 class="name">Cours régulier de <?php echo $GLOBALS['coursPhilo']["libelle"] ?></h3>
                         <p class="description">Jours :<?php calculJours($GLOBALS['coursPhilo']) ?></p>
                         <p class="description">Fréquence : <?php echo $GLOBALS['coursPhilo']["frequence"] ?> par jour</p>
                         <p class="description">Professeur : <?php echo $GLOBALS['coursPhilo']["professeur"] ?></p>
                     </div>
                 <?php endif; ?>
-                <div class="col-sm-6 col-lg-4 item"><i class="fa fa-calculator icon"></i>
-                    <h3 class="name">Cours régulier de Maths<br><br></h3>
-                    <p class="description">Jours: Lundi,Mardi,Jeudi</p>
-                    <p class="description">Fréquence: 2H par jour</p>
-                    <p class="description">Professeur: Mme Antone</p>
-                </div>
-                <div class="col-sm-6 col-lg-4 item"><i class="fa fa-commenting-o icon"></i>
-                    <h3 class="name">Cours régulier d'Anglais</h3>
-                    <p class="description">Jours: Lundi,Mardi,Jeudi<br></p>
-                    <p class="description">Fréquence: 2H par jour<br></p>
-                    <p class="description">Professeur: Mme Claude De Bau<br></p>
-                </div>
-                <div class="col-sm-6 col-lg-4 item"><i class="fa fa-medkit icon"></i>
-                    <h3 class="name">Cours régulier SVT</h3>
-                    <p class="description">Jours: Lundi,Mardi,Jeudi<br></p>
-                    <p class="description">Fréquence: 2H par jour<br></p>
-                    <p class="description">Professeur: Mr Leboeuf<br></p>
-                </div>
-                <div class="col-sm-6 col-lg-4 item"><i class="fa fa-soccer-ball-o icon"></i>
-                    <h3 class="name">Cours régulier Sport</h3>
-                    <p class="description">Jours: Lundi,Mardi,Jeudi<br></p>
-                    <p class="description">Fréquence: 2H par jour<br></p>
-                    <p class="description">Professeur: Mr. Schneider<br></p>
-                </div>
-                <div class="col-sm-6 col-lg-4 item"><i class="fa fa-institution icon"></i>
-                    <h3 class="name">Cours régulier droit</h3>
-                    <p class="description">Jours: Lundi,Mardi,Jeudi<br></p>
-                    <p class="description">Fréquence: 2H par jour<br></p>
-                    <p class="description">Professeur: Mme. Gastand<br></p>
-                </div>
+                <?php if($GLOBALS['maths']==1) : ?>
+                    <div class="col-sm-6 col-lg-4 item"><i class="fa fa-calculator icon"></i>
+                        <h3 class="name">Cours régulier de <?php echo $GLOBALS['coursMaths']["libelle"] ?><br><br></h3>
+                        <p class="description">Jours: <?php calculJours($GLOBALS['coursMaths']) ?></p>
+                        <p class="description">Fréquence: <?php echo $GLOBALS['coursMaths']["frequence"] ?> par jour</p>
+                        <p class="description">Professeur: <?php echo $GLOBALS['coursMaths']["professeur"] ?></p>
+                    </div>
+                <?php endif; ?>
+                <?php if($GLOBALS['anglais']==1) : ?>
+                    <div class="col-sm-6 col-lg-4 item"><i class="fa fa-commenting-o icon"></i>
+                        <h3 class="name">Cours régulier d'<?php echo $GLOBALS['coursAnglais']["professeur"] ?></h3>
+                        <p class="description">Jours: <?php calculJours($GLOBALS['coursAnglais']) ?><br></p>
+                        <p class="description">Fréquence: <?php echo $GLOBALS['coursAnglais']["frequence"] ?> par jour<br></p>
+                        <p class="description">Professeur: <?php echo $GLOBALS['coursAnglais']["professeur"] ?><br></p>
+                    </div>
+                <?php endif; ?>
+                <?php if($GLOBALS['svt']==1) : ?>
+                    <div class="col-sm-6 col-lg-4 item"><i class="fa fa-medkit icon"></i>
+                        <h3 class="name">Cours régulier <?php echo $GLOBALS['coursSvt']["libelle"] ?></h3>
+                        <p class="description">Jours: <?php calculJours($GLOBALS['coursSvt']) ?><br></p>
+                        <p class="description">Fréquence: <?php echo $GLOBALS['coursSvt']["frequence"] ?> par jour<br></p>
+                        <p class="description">Professeur: <?php echo $GLOBALS['coursSvt']["professeur"] ?><br></p>
+                    </div>
+                <?php endif; ?>
+                <?php if($GLOBALS['sport']==1) : ?>
+                    <div class="col-sm-6 col-lg-4 item"><i class="fa fa-soccer-ball-o icon"></i>
+                        <h3 class="name">Cours régulier <?php echo $GLOBALS['coursSport']["libelle"] ?></h3>
+                        <p class="description">Jours: <?php calculJours($GLOBALS['coursSport']) ?><br></p>
+                        <p class="description">Fréquence: <?php echo $GLOBALS['coursSport']["frequence"] ?> par jour<br></p>
+                        <p class="description">Professeur: <?php echo $GLOBALS['coursSport']["professeur"] ?><br></p>
+                    </div>
+                <?php endif; ?>
+                <?php if($GLOBALS['droit']==1) : ?>
+                    <div class="col-sm-6 col-lg-4 item"><i class="fa fa-institution icon"></i>
+                        <h3 class="name">Cours régulier <?php echo $GLOBALS['coursDroit']["libelle"] ?></h3>
+                        <p class="description">Jours: <?php calculJours($GLOBALS['coursDroit']) ?><br></p>
+                        <p class="description">Fréquence: <?php echo $GLOBALS['coursDroit']["frequence"] ?> par jour<br></p>
+                        <p class="description">Professeur: <?php echo $GLOBALS['coursDroit']["professeur"] ?><br></p>
+                    </div>
+                <?php endif; ?>
             </div>
         </div>
     </div>
